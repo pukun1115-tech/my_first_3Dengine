@@ -7,9 +7,39 @@ const keys = {};
 document.addEventListener("keydown",e => keys[e.key]=true);
 document.addEventListener("keyup",e => keys[e.key]=false);
 
+let isDragging = false;
+let lastX = 0;
+let lastY = 0;
+canvas.addEventListener("mousedown",
+                        (e)=>{isDragging = true;
+                              lastX = e.clientX;
+                              lastY = e.clientY;
+                             }
+                       );
+canvas.addEventListener("mouseup",
+                        ()=>{isDragging = false;}
+                       );
+canvas.addEventListener("mouseleave",
+                       ()=>isDragging = false;
+                       );
+canvas.addEventListener("mousemove",
+                       (e)=>{if(!isDragging) return;
+                            
+                            const dx = e.clientX - lastX;
+                            const dy = e.clientY - lastY;
+                            
+                            camera.rot.y +=dx*0.05;
+                            camera.rot.x +=dy*0.05;
+
+                            lastX=e.clientX;
+                            lastY=e.clientY;
+                            
+                            }
+                       );
+
 const camera =
 {
-  pos: {x: 0, y: 5, z: -20},
+  pos: {x: 0, y: 5, z: -5},
   rot: {x: 0, y: 0, z: 0},
   fov: 500,
   zclip: 1
@@ -70,6 +100,8 @@ function move()
   if(keys["ArrowRight"]) camera.rot.y +=0.03;
   if(keys["ArrowUp"]) camera.rot.x -=0.03;
   if(keys["ArrowDown"]) camera.rot.x +=0.03;
+
+  
 }
 
 
