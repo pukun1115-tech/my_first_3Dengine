@@ -3,10 +3,10 @@ const ctx = canvas.getContext("2d");
 
 const camera =
 {
-  pos: {x: 0, y: 5, z: -10},
+  pos: {x: 0, y: 5, z: -20},
   rot: {x: 0, y: 0, z: 0},
   fov: 500,
-  zclip: 0.5
+  zclip: 1
 }
 
 window.addEventListener("resize", resize);
