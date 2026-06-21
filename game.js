@@ -1,6 +1,14 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const camera =
+{
+  pos: {x: 0, y: 5, z: -10},
+  rot: {x: 0, y: 0, z: 0},
+  fov: 500,
+  zclip: 0.5
+}
+
 window.addEventListener("resize", resize);
 
 const keys = {};
@@ -37,13 +45,7 @@ canvas.addEventListener("mousemove",
                             }
                        );
 
-const camera =
-{
-  pos: {x: 0, y: 5, z: -10},
-  rot: {x: 0, y: 0, z: 0},
-  fov: 500,
-  zclip: 0.5
-}
+
 
 resize();
 loop();
