@@ -78,16 +78,28 @@ function draw()//メイン描画
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   let v1 = {x:0,y:0,z:5};
-  let v2 = {x:10,y:0,z:5};
-  let v3 = {x:10,y:0,z:10};
+  let v2 = {x:5,y:0,z:5};
+  let v3 = {x:5,y:0,z:10};
 
   fillTriangle3D(v1,v2,v3,camera,"red");
 
   let v4 = {x:0,y:0,z:5};
-  let v5 = {x:10,y:0,z:10};
+  let v5 = {x:5,y:0,z:10};
   let v6 = {x:0,y:0,z:10};
 
   fillTriangle3D(v4,v5,v6,camera,"red");
+
+  let v7 = {x:0,y:0,z:10};
+  let v8 = {x:5,y:0,z:10};
+  let v9 = {x:5,y:5,z:10};
+
+  fillTriangle3D(v7,v8,v9,camera,"yellow")
+
+  let v10 = {x:0,y:0,z:10};
+  let v11 = {x:5,y:5,z:10};
+  let v12 = {x:0,y:5,z:10};
+
+  fillTriangle3D(v10,v11,v12,camera,"yellow")
 }
 
 
