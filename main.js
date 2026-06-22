@@ -1,14 +1,6 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const camera =
-{
-  pos: {x: 0, y: 5, z: -20},
-  rot: {x: 0, y: 0, z: 0},
-  fov: 500,
-  zclip: 1
-}
-
 window.addEventListener("resize", resize);
 
 const keys = {};
@@ -16,7 +8,13 @@ document.addEventListener("keydown",e => keys[e.key]=true);
 document.addEventListener("keyup",e => keys[e.key]=false);
 
 
-
+const camera =
+{
+  pos: {x: 0, y: 5, z: -20},
+  rot: {x: 0, y: 0, z: 0},
+  fov: 500,
+  zclip: 1
+}
 
 
 resize();
