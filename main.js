@@ -7,6 +7,27 @@ const keys = {};
 document.addEventListener("keydown",e => keys[e.key]=true);
 document.addEventListener("keyup",e => keys[e.key]=false);
 
+canvas.addEventListener("touchstart",e=>
+  {
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+  });
+
+canvas.addEventListener("touchmove",e=>
+  {
+    const t = e.touches[0];
+    const moveX = t.clientX - touchStartX;
+    const moveY = t.clientY - touchStartY;
+
+    e.preventDefault();
+  });
+
+canvas.addEventListener("touchend",e=>
+  {
+    moveX = 0;
+    moveY = 0;
+  });
 
 const camera =
 {
@@ -35,8 +56,6 @@ function resize()
 
 function move() 
 {
-  camera.pos.z +=0.01;
-  
   const speed = 0.1;
 
   const sinY = Math.sin(camera.rot.y);
@@ -63,6 +82,9 @@ function move()
     camera.pos.z -= sinY * speed;
   }
 
+  camera.pos.x +=moveX;
+  camera.pos.z +=moveY;
+
 
   if(keys["q"]) camera.pos.y +=1;
   if(keys["e"]) camera.pos.y -=1;
@@ -70,12 +92,10 @@ function move()
   if(keys["i"]) camera.fov +=3;
   if(keys["k"]) camera.fov -=3;
 
-  if(keys["ArrowLeft"]) camera.rot.y -=0.03;
-  if(keys["ArrowRight"]) camera.rot.y +=0.03;
-  if(keys["ArrowUp"]) camera.rot.x -=0.03;
-  if(keys["ArrowDown"]) camera.rot.x +=0.03;
-
-  
+  if(keys["ArrowLeft"]) camera.rot.y -=0.01;
+  if(keys["ArrowRight"]) camera.rot.y +=0.01;
+  if(keys["ArrowUp"]) camera.rot.x -=0.01;
+  if(keys["ArrowDown"]) camera.rot.x +=0.01;
 }
 
 
