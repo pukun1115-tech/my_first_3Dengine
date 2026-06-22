@@ -90,8 +90,8 @@ function draw()//メイン描画
   let v7 = {x:10,y:10,z:10};
   let v8 = {x:20,y:10,z:0};
 
-  fillTriangle3D(v1,v2,v3,camera,blue);
-  fillTriangle3D(v2,v3,v1,camera,blue);
+  fillTriangle3D(v1,v2,v3,camera,"blue");
+  fillTriangle3D(v2,v3,v1,camera,"blue");
 }
 
 
