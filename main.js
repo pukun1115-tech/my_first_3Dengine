@@ -35,6 +35,8 @@ function resize()
 
 function move() 
 {
+  camera.pos.z +=0.01;
+  
   const speed = 0.1;
 
   const sinY = Math.sin(camera.rot.y);
