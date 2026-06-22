@@ -10,8 +10,8 @@ document.addEventListener("keyup",e => keys[e.key]=false);
 
 const camera =
 {
-  pos: {x: 0, y: 5, z: -20},
-  rot: {x: 0, y: 0, z: 0},
+  pos: {x: -5, y: 5, z: -20},
+  rot: {x: -30, y: 30, z: 0},
   fov: 500,
   zclip: 1
 }
@@ -35,7 +35,7 @@ function resize()
 
 function move() 
 {
-  camera.pos.z +=1;
+  camera.pos.z +=0.01;
   
   const speed = 0.1;
 
