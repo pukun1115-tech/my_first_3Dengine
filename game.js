@@ -9,7 +9,7 @@ document.addEventListener("keyup",e => keys[e.key]=false);//キーが押され�
 
 const camera =
 {
-  pos: {x: -5, y: 5, z: -20},
+  pos: {x: -1, y: 5, z: -20},
   rot: {x: 0, y: 0, z: 0},
   fov: 500,
   zclip: 1
@@ -34,8 +34,10 @@ function resize()
 
 function move() 
 {
+  camera.pos.z +=0.001;
+  
   const speed = 0.1;
-
+  
   const sinY = Math.sin(camera.rot.y);
   const cosY = Math.cos(camera.rot.y);
 
