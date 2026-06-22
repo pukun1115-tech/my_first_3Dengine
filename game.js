@@ -92,6 +92,8 @@ function draw()//メイン描画
 
   fillTriangle3D(v1,v2,v3,camera,"blue");
   fillTriangle3D(v2,v3,v1,camera,"blue");
+  fillTriangle3D(v2,v3,v7,camera,"white");
+  fillTriangle3D(v2,v7,v6,camera,"white");
 }
 
 
