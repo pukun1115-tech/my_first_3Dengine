@@ -1,12 +1,13 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-window.addEventListener("resize", resize);
+window.addEventListener("resize", resize);//画面のサイズが変わった時
 
-const keys = {};
-document.addEventListener("keydown",e => keys[e.key]=true);
-document.addEventListener("keyup",e => keys[e.key]=false);
+const keys = {};//押されているキー
+document.addEventListener("keydown",e => keys[e.key]=true);//キーが押された時
+document.addEventListener("keyup",e => keys[e.key]=false);//キーが押されてない時
 
+//キャンバスをタッチした時
 canvas.addEventListener("touchstart",e=>
   {
     const t = e.touches[0];
@@ -32,7 +33,7 @@ canvas.addEventListener("touchend",e=>
 const camera =
 {
   pos: {x: -5, y: 5, z: -20},
-  rot: {x: -30, y: 30, z: 0},
+  rot: {x: 0, y: 0, z: 0},
   fov: 500,
   zclip: 1
 }
