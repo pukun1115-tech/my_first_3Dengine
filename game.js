@@ -34,8 +34,8 @@ function resize()
 
 function move() 
 {
-  camera.pos.z +=0.003;
-  camera.rot.y +=0.001;
+  camera.pos.z +=0.01;
+  camera.rot.y +=0.02;
   
   const speed = 0.1;
   
