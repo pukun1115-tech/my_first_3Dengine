@@ -12,28 +12,32 @@ const camera =
   pos: {x: -1, y: 2, z: -10},
   rot: {x: 0, y: 0, z: 0},
   fov: 300,
-  zclip: 0.01
+  zclip: 0.0001
 };
+
+let depthBuffer;
+let imageData;
+let pixels;
 
 let triangles = 
 [
   {
   v1:{x:0,y:0,z:0},
-  v2:{x:5,y:0,z:0},
-  v3:{x:5,y:5,z:0},
+  v2:{x:1,y:0,z:0},
+  v3:{x:1,y:1,z:0},
   color:"#FFFFFF"
  },
  {
    v1:{x:0,y:0,z:0},
-   v2:{x:5,y:5,z:0},
-   v3:{x:0,y:5,z:0},
-   color:"blue"
+   v2:{x:1,y:1,z:0},
+   v3:{x:0,y:1,z:0},
+   color:"#00ff00"
  },
  {
    v1:{x:0,y:0,z:0},
-   v2:{x:0,y:0,z:5},
-   v3:{x:0,y:5,z:5},
-   color:"#FFFFFF"
+   v2:{x:0,y:0,z:1},
+   v3:{x:0,y:1,z:1},
+   color:"#ffffff"
  }
 ];
 
@@ -83,8 +87,8 @@ function move()
   }
 
 
-  if(keys["q"]) camera.pos.y +=1;
-  if(keys["e"]) camera.pos.y -=1;
+  if(keys["q"]) camera.pos.y +=speed;
+  if(keys["e"]) camera.pos.y -=speed;
 
   if(keys["i"]) camera.fov +=3;
   if(keys["k"]) camera.fov -=3;
@@ -99,11 +103,20 @@ function move()
 function draw()//メイン描画
 {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  pixels = imageData.data;
+
+  depthBuffer = new Float32Array(canvas.width * canvas.height);
+  for (let i = 0; i < depthBuffer.length; i++) depthBuffer[i] = Infinity;
+
   
   for(let tri of triangles)
   {
    fillTriangle3D(tri.v1, tri.v2, tri.v3, camera, tri.color);
   }
+
+  ctx.putImageData(imageData, 0, 0);
 }
 
 function intersectZclip(a,b,zclip)//zclipと線分abの交点計算
@@ -188,16 +201,58 @@ function fillTriangle3D(v1, v2, v3, cam, color )//3Dワールド座標の三角�
 }
 
 
-function fillTriangle(x1, y1, x2, y2, x3, y3, color)//実際に画面に描く
+function fillTriangle(p1, p2, p3, color)
 {
-  ctx.fillStyle = color;
+  const x1 = p1.x, y1 = p1.y, z1 = p1.z;
+  const x2 = p2.x, y2 = p2.y, z2 = p2.z;
+  const x3 = p3.x, y3 = p3.y, z3 = p3.z;
 
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2, y2);
-  ctx.lineTo(x3, y3);
-  ctx.closePath();
-  ctx.fill();
+  const minX = Math.max(0, Math.floor(Math.min(x1, x2, x3)));
+  const maxX = Math.min(canvas.width - 1, Math.ceil(Math.max(x1, x2, x3)));
+  const minY = Math.max(0, Math.floor(Math.min(y1, y2, y3)));
+  const maxY = Math.min(canvas.height - 1, Math.ceil(Math.max(y1, y2, y3)));
+
+  const denom =
+    (y2 - y3) * (x1 - x3) +
+    (x3 - x2) * (y1 - y3);
+
+  if (denom === 0) return;
+
+  // 色をRGBに変換
+  const r = parseInt(color.slice(1, 3), 16);
+  const g = parseInt(color.slice(3, 5), 16);
+  const b = parseInt(color.slice(5, 7), 16);
+
+  for (let y = minY; y <= maxY; y++)
+  {
+    for (let x = minX; x <= maxX; x++)
+    {
+      const w1 =
+        ((y2 - y3) * (x - x3) +
+         (x3 - x2) * (y - y3)) / denom;
+      const w2 =
+        ((y3 - y1) * (x - x3) +
+         (x1 - x3) * (y - y3)) / denom;
+      const w3 = 1 - w1 - w2;
+
+      if (w1 < 0 || w2 < 0 || w3 < 0) continue;
+
+      const z = w1 * z1 + w2 * z2 + w3 * z3;
+
+      const idx = y * canvas.width + x;
+
+      if (z < depthBuffer[idx])
+      {
+        depthBuffer[idx] = z;
+
+        const p = idx * 4;
+        pixels[p] = r;
+        pixels[p+1] = g;
+        pixels[p+2] = b;
+        pixels[p+3] = 255;
+      }
+    }
+  }
 }
 
 
@@ -206,7 +261,12 @@ function drawClippedTriangle(a, b, c, cam, color)
   let p1 = project(a);
   let p2 = project(b);
   let p3 = project(c);
-  fillTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, color);
+
+  p1.z = a.z;
+  p2.z = b.z;
+  p3.z = c.z;
+
+  fillTriangle(p1, p2, p3, color);
 }
 
 
@@ -214,8 +274,8 @@ function project(v)//画面の座標に変換
 {
   const scale = camera.fov / v.z;
   return{
-    x: canvas.width  / 2 + v.x * scale,
-    y: canvas.height / 2 - v.y * scale
+    x: (canvas.width  / 2) + v.x * scale,
+    y: (canvas.height / 2) - v.y * scale
   };
 }
 
