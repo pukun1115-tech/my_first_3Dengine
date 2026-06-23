@@ -87,7 +87,7 @@ function draw()//メイン描画
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
   for(let tri of triangles){
-   fillTriangle3D(tri.v1.x, tri.v1.y, tri.v1.z, tri.v2.x, tri.v2.y, tri.v2.z, tri.v3.x, tri.v3.y, tri.v3.z, tri.color);
+   fillTriangle3D(tri.v1.x, tri.v1.y, tri.v1.z, tri.v2.x, tri.v2.y, tri.v2.z, tri.v3.x, tri.v3.y, tri.v3.z, camera, tri.color);
   }
 }
 
