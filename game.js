@@ -15,6 +15,7 @@ const camera =
   zclip: 1
 }
 
+let triangles = [{v1:{x:0,y:0,z:0},v2:{x:5,y:0,z:0},v3:{x:5,y:5,z:0},color:"blue"}]
 
 resize();
 loop();
@@ -78,32 +79,10 @@ function move()
 function draw()//メイン描画
 {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  let v1 = {x:10,y:0,z:0};
-  let v2 = {x:10,y:0,z:10};
-  let v3 = {x:20,y:0,z:10};
-  let v4 = {x:20,y:0,z:0};
-  let v5 = {x:10,y:10,z:0};
-  let v6 = {x:10,y:10,z:10};
-  let v7 = {x:10,y:10,z:10};
-  let v8 = {x:20,y:10,z:0};
-
-  fillTriangle3D(v1,v2,v3,camera,"blue");
-  fillTriangle3D(v3,v4,v1,camera,"blue");
-  fillTriangle3D(v2,v3,v7,camera,"white");
-  fillTriangle3D(v7,v6,v2,camera,"white");
-}
-
-
-function drawLine(x1, y1, x2, y2, color = "white", width = 1)//線を引く
-{
-  ctx.strokeStyle = color;
-  ctx.lineWidth = width;
-
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2, y2);
-  ctx.stroke();
+  
+  for(let tri of triangles){
+   fillTriangle3D(tri.v1.x, tri.v1.y, tri.v1.z, tri.v2.x, tri.v2.y, tri.v2.z, tri.v3.x, tri.v3.y, tri.v3.z, tri.color);
+  }
 }
 
 function intersectZclip(a,b,zclip)//zclipと線分abの交点計算
@@ -118,11 +97,11 @@ function intersectZclip(a,b,zclip)//zclipと線分abの交点計算
 }
 
 
-function fillTriangle3D(v1,v2,v3,cam,color)//3Dワールド座標の三角形v1,v2,v3を塗りつぶす
+function fillTriangle3D(v1, v2, v3, cam, color )//3Dワールド座標の三角形v1,v2,v3を塗りつぶす
 {
-  let c1 = worldToCamera(v1,cam);
-  let c2 = worldToCamera(v2,cam);
-  let c3 = worldToCamera(v3,cam);
+  let c1 = worldToCamera(v1, cam);
+  let c2 = worldToCamera(v2, cam);
+  let c3 = worldToCamera(v3, cam);
 
   const zc = cam.zclip;
 
@@ -134,7 +113,7 @@ function fillTriangle3D(v1,v2,v3,cam,color)//3Dワールド座標の三角形v1,
 
   if(isOk1&&isOk2&&isOk3)//yyy
   {
-      drawClippedTriangle(c1,c2,c3,cam,color);
+      drawClippedTriangle(c1, c2, c3, cam, color);
       return;
   }
 
@@ -143,7 +122,7 @@ function fillTriangle3D(v1,v2,v3,cam,color)//3Dワールド座標の三角形v1,
   {
     let i2 = intersectZclip(c1, c2, zc);
     let i3 = intersectZclip(c1, c3, zc);
-    drawClippedTriangle(c1, i2, i3, cam, color);
+    drawClippedTriangle(c1 , i2, i3, cam, color);
     return;
   }
   if(!isOk1&&isOk2&&!isOk3)//nyn
@@ -162,7 +141,7 @@ function fillTriangle3D(v1,v2,v3,cam,color)//3Dワールド座標の三角形v1,
   }
 
   //yyn,yny,nyy
-  if(!isOk1&&isOk2&&isOk3)
+  if(!isOk1&&isOk2&&isOk3)//nyy
   {
     let i2 = intersectZclip(c1,c2,zc);
     let i3 = intersectZclip(c1,c3,zc);
@@ -170,7 +149,7 @@ function fillTriangle3D(v1,v2,v3,cam,color)//3Dワールド座標の三角形v1,
     drawClippedTriangle(c3,i2,i3,cam,color);
     return;
   }
-  if(isOk1&&!isOk2&&isOk3)
+  if(isOk1&&!isOk2&&isOk3)//yny
   {
     let i1 = intersectZclip(c2,c1,zc);
     let i3 = intersectZclip(c2,c3,zc);
@@ -178,12 +157,12 @@ function fillTriangle3D(v1,v2,v3,cam,color)//3Dワールド座標の三角形v1,
     drawClippedTriangle(c3,i1,i3,cam,color);
     return;
   }
-  if(isOk1&&isOk2&&!isOk3)
+  if(isOk1&&isOk2&&!isOk3)//yyn
   {
-    let i1 = intersectZclip(c3,c1,zc);
-    let i2 = intersectZclip(c3,c2,zc);
-    drawClippedTriangle(c1,c2,i1,cam,color);
-    drawClippedTriangle(c2,i1,i2,cam,color);
+    let i1 = intersectZclip(c3, c1, zc);
+    let i2 = intersectZclip(c3, c2, zc);
+    drawClippedTriangle(c1, c2, i1, cam, color);
+    drawClippedTriangle(c2, i1, i2, cam, color);
   }
 }
 
@@ -201,18 +180,18 @@ function fillTriangle(x1, y1, x2, y2, x3, y3, color)//実際に画面に描く
 }
 
 
-function drawClippedTriangle(a,b,c,cam,color)
+function drawClippedTriangle(a, b, c, cam, color)
 {
   let p1 = project(a);
   let p2 = project(b);
   let p3 = project(c);
-  fillTriangle(p1.x,p1.y,p2.x,p2.y,p3.x,p3.y,color);
+  fillTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, color);
 }
 
 
 function project(v)//画面の座標に変換
 {
-  const scale = camera.fov/ v.z;
+  const scale = camera.fov / v.z;
   return{
     x: canvas.width  / 2 + v.x * scale,
     y: canvas.height / 2 - v.y * scale
