@@ -9,7 +9,7 @@ document.addEventListener("keyup",e => keys[e.key]=false);//キーが押され�
 
 const camera =
 {
-  pos: {x: -1, y: 2, z: -20},
+  pos: {x: -1, y: 2, z: -10},
   rot: {x: 0, y: 0, z: 0},
   fov: 300,
   zclip: 0.01
@@ -100,7 +100,8 @@ function draw()//メイン描画
 {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  for(let tri of triangles){
+  for(let tri of triangles)
+  {
    fillTriangle3D(tri.v1, tri.v2, tri.v3, camera, tri.color);
   }
 }
