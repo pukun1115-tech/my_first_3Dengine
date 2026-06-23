@@ -12,7 +12,7 @@ const camera =
   pos: {x: -1, y: 2, z: -20},
   rot: {x: 0, y: 0, z: 0},
   fov: 300,
-  zclip: 0.1
+  zclip: 0.01
 };
 
 let triangles = 
