@@ -15,7 +15,7 @@ const camera =
   zclip: 1
 }
 
-let triangles = [{v1:{x:0,y:0,z:0},v2:{x:5,y:0,z:0},v3:{x:5,y:5,z:0},color:"blue"}]
+let triangles = [{v1:{x:0,y:0,z:0},v2:{x:5,y:0,z:0},v3:{x:5,y:5,z:0},color:"#FFFFFF"}]
 
 resize();
 loop();
