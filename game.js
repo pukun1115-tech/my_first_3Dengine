@@ -13,7 +13,7 @@ const camera =
   rot: {x: 0, y: 0, z: 0},
   fov: 300,
   zclip: 1
-}
+};
 
 let triangles = 
 [{
